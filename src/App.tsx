@@ -21,6 +21,9 @@ const SquadPage = lazy(() => import('./features/squad/SquadPage'))
 const WritingPage = lazy(() => import('./features/writing/WritingPage'))
 const ProgressPage = lazy(() => import('./features/progress/ProgressPage'))
 
+const LandingPage = lazy(() => import('./features/landing/LandingPage'))
+const PrivacyPage = lazy(() => import('./features/landing/PrivacyPage'))
+
 const Loading = () => <p className="muted center pad">{t.loading}</p>
 
 function Protected({ children }: { children: ReactNode }) {
@@ -37,6 +40,8 @@ export function App() {
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
+        {status === 'signedOut' && <Route index element={<LandingPage />} />}
+        <Route path="privacy" element={<PrivacyPage />} />
         <Route
           path="/signin"
           element={status === 'signedIn' ? <Navigate to="/" replace /> : status === 'loading' ? <Loading /> : <AuthPage />}

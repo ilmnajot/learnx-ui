@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { Link, useSearchParams } from 'react-router'
 import { useAuth } from '../../auth/AuthContext'
 import { ThemeToggle } from '../../components/ThemeToggle'
 import { Button, ErrorNote } from '../../components/ui'
@@ -19,7 +20,8 @@ function TerminalDemo() {
 
 export function AuthPage() {
   const { login, register } = useAuth()
-  const [mode, setMode] = useState<'signIn' | 'signUp'>('signUp')
+  const [params] = useSearchParams()
+  const [mode, setMode] = useState<'signIn' | 'signUp'>(params.get('mode') === 'signin' ? 'signIn' : 'signUp')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -44,7 +46,7 @@ export function AuthPage() {
     <main className="auth">
       <section className="auth-intro">
         <div className="row between">
-          <p className="brand"><span aria-hidden>&gt;_</span> {t.appName}</p>
+          <Link to="/" className="brand"><span aria-hidden>&gt;_</span> {t.appName}</Link>
           <ThemeToggle />
         </div>
         <h1>{t.tagline}</h1>
