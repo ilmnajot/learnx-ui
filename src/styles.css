@@ -250,6 +250,13 @@ textarea { resize: vertical; }
 .word:disabled { opacity: 0.3; box-shadow: none; cursor: default; }
 .word.placed:disabled { opacity: 1; }
 
+/* Shadowing */
+.sentence-line { font-size: 1.25rem; font-weight: 650; line-height: 1.5; }
+.said { transition: color 180ms; }
+.said.hit { color: var(--accent-text); }
+.said.miss { color: var(--muted); text-decoration: underline dotted; text-underline-offset: 4px; }
+.score { font-weight: 650; animation: pop 320ms var(--spring) both; }
+
 /* Squad */
 .incident { background: var(--danger-soft); border-color: transparent; color: var(--danger); box-shadow: none; }
 .incident:not(.resolved) svg { animation: blink 1.2s step-end infinite; }

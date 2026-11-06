@@ -80,12 +80,12 @@ export function useApiQuery<T>(key: readonly unknown[], path: string) {
   return useQuery<T>({ queryKey: key, queryFn: async () => (await api<T>(path)) ?? (null as T) })
 }
 
-export function speak(text: string): void {
+export function speak(text: string, rate = 0.95): void {
   if (!('speechSynthesis' in window)) return
   window.speechSynthesis.cancel()
   const utterance = new SpeechSynthesisUtterance(text)
   utterance.lang = 'en-US'
-  utterance.rate = 0.95
+  utterance.rate = rate
   window.speechSynthesis.speak(utterance)
 }
 

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { CheckCircle2, Mic, Square } from 'lucide-react'
+import { AudioLines, CheckCircle2, Mic, Square } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { Link, useParams } from 'react-router'
 import { api } from '../../api/client'
@@ -113,6 +113,15 @@ export default function VideoPage() {
                   </article>
                 ))}
               </section>
+
+              <Link className="card row gap link-card" to={`/games/shadow?video=${video.id}`}>
+                <span className="chip green"><AudioLines size={20} aria-hidden /></span>
+                <span className="grow">
+                  <strong>{t.shadowing}</strong>
+                  <br />
+                  <span className="muted small">{t.shadowVideoHint}</span>
+                </span>
+              </Link>
 
               <Retell prompt={video.speakPrompt} />
 

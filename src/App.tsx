@@ -16,6 +16,7 @@ const PhraseMatchPage = lazy(() => import('./features/games/PhraseMatchPage'))
 const WordOrderPage = lazy(() => import('./features/games/WordOrderPage'))
 const VideosPage = lazy(() => import('./features/videos/VideosPage'))
 const VideoPage = lazy(() => import('./features/videos/VideoPage'))
+const ShadowingPage = lazy(() => import('./features/shadowing/ShadowingPage'))
 const SquadPage = lazy(() => import('./features/squad/SquadPage'))
 const WritingPage = lazy(() => import('./features/writing/WritingPage'))
 const ProgressPage = lazy(() => import('./features/progress/ProgressPage'))
@@ -67,6 +68,7 @@ export function App() {
         <Route path="review" element={<Protected><ReviewPage /></Protected>} />
         <Route path="games/match" element={<Protected><PhraseMatchPage /></Protected>} />
         <Route path="games/order" element={<Protected><WordOrderPage /></Protected>} />
+        <Route path="games/shadow" element={<Protected><ShadowingPage /></Protected>} />
         <Route path="writing" element={<Protected><WritingPage /></Protected>} />
         <Route
           path="*"

@@ -120,7 +120,7 @@ export interface GameResult {
   gamesScoredToday: number
 }
 
-export type GameName = 'PHRASE_MATCH' | 'WORD_ORDER'
+export type GameName = 'PHRASE_MATCH' | 'WORD_ORDER' | 'SHADOWING'
 
 export type VideoCategory = 'COMEDY' | 'INSPIRATION' | 'SPEAKING'
 

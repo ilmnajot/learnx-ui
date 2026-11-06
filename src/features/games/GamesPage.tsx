@@ -1,9 +1,10 @@
-import { ArrowDownUp, ChevronRight, Link2, RefreshCw } from 'lucide-react'
+import { ArrowDownUp, AudioLines, ChevronRight, Link2, RefreshCw } from 'lucide-react'
 import { Link } from 'react-router'
 import { Screen } from '../../components/ui'
 import { t } from '../../i18n'
 
 const GAMES = [
+  { to: '/games/shadow', icon: AudioLines, color: 'green', title: t.shadowing, hint: t.shadowingHint },
   { to: '/games/match', icon: Link2, color: 'violet', title: t.phraseMatch, hint: t.phraseMatchHint },
   { to: '/games/order', icon: ArrowDownUp, color: 'blue', title: t.wordOrder, hint: t.wordOrderHint },
   { to: '/review', icon: RefreshCw, color: 'amber', title: t.review, hint: t.tryAloud },
