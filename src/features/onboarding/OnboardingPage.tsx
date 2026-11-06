@@ -1,21 +1,44 @@
 import { useMutation } from '@tanstack/react-query'
+import {
+  Building2,
+  Cloud,
+  Database,
+  Globe,
+  Handshake,
+  LayoutTemplate,
+  MessagesSquare,
+  Server,
+  Smartphone,
+  Sparkles,
+  TestTube2,
+  UserCheck,
+  type LucideIcon,
+} from 'lucide-react'
 import { useState } from 'react'
 import { api } from '../../api/client'
 import type { PlacementQuestion, PlacementResult, User } from '../../api/types'
 import { useAuth } from '../../auth/AuthContext'
+import { Confetti } from '../../components/Confetti'
 import { Button, ErrorNote, ProgressBar, QueryView, Screen, useApiQuery } from '../../components/ui'
 import { t } from '../../i18n'
 
 type Step = 'role' | 'goal' | 'placement' | 'result'
 
-function Choices({ options, onPick }: { options: readonly string[]; onPick: (value: string) => void }) {
+const ROLE_ICONS: LucideIcon[] = [Server, LayoutTemplate, Smartphone, TestTube2, Cloud, Database, Sparkles]
+const GOAL_ICONS: LucideIcon[] = [MessagesSquare, Building2, UserCheck, Handshake]
+
+function Choices({ options, icons, onPick }: { options: readonly string[]; icons: LucideIcon[]; onPick: (value: string) => void }) {
   return (
-    <div className="stack">
-      {options.map((option) => (
-        <Button key={option} className="choice" onClick={() => onPick(option)}>
-          {option}
-        </Button>
-      ))}
+    <div className="stack-sm">
+      {options.map((option, i) => {
+        const Icon = icons[i] ?? Globe
+        return (
+          <Button key={option} className="choice" onClick={() => onPick(option)}>
+            <span className="chip green"><Icon size={18} aria-hidden /></span>
+            {option}
+          </Button>
+        )
+      })}
     </div>
   )
 }
@@ -39,23 +62,25 @@ function Placement({ onDone }: { onDone: (result: PlacementResult) => void }) {
           <div className="stack">
             <p className="muted">{t.onboardingPlacementHint}</p>
             <ProgressBar percent={(index / questions.length) * 100} label={t.onboardingPlacement} />
-            <p className="prompt">{question.prompt}</p>
-            <div className="stack">
-              {question.options.map((option, optionIndex) => (
-                <Button
-                  key={option}
-                  className="choice"
-                  disabled={submit.isPending}
-                  onClick={() => {
-                    const next = [...answers, { questionId: question.id, selectedIndex: optionIndex }]
-                    setAnswers(next)
-                    if (index + 1 < questions.length) setIndex(index + 1)
-                    else submit.mutate(next)
-                  }}
-                >
-                  {option}
-                </Button>
-              ))}
+            <div key={question.id} className="stack question">
+              <p className="prompt">{question.prompt}</p>
+              <div className="stack-sm">
+                {question.options.map((option, optionIndex) => (
+                  <Button
+                    key={option}
+                    className="choice"
+                    disabled={submit.isPending}
+                    onClick={() => {
+                      const next = [...answers, { questionId: question.id, selectedIndex: optionIndex }]
+                      setAnswers(next)
+                      if (index + 1 < questions.length) setIndex(index + 1)
+                      else submit.mutate(next)
+                    }}
+                  >
+                    {option}
+                  </Button>
+                ))}
+              </div>
             </div>
             <ErrorNote error={submit.error} />
           </div>
@@ -84,13 +109,13 @@ export default function OnboardingPage() {
         {step === 'role' && (
           <>
             <h1>{t.onboardingRole}</h1>
-            <Choices options={t.roles} onPick={(value) => { setJobRole(value); setStep('goal') }} />
+            <Choices options={t.roles} icons={ROLE_ICONS} onPick={(value) => { setJobRole(value); setStep('goal') }} />
           </>
         )}
         {step === 'goal' && (
           <>
             <h1>{t.onboardingGoal}</h1>
-            <Choices options={t.goals} onPick={(value) => { setGoal(value); setStep('placement') }} />
+            <Choices options={t.goals} icons={GOAL_ICONS} onPick={(value) => { setGoal(value); setStep('placement') }} />
           </>
         )}
         {step === 'placement' && (
@@ -101,9 +126,10 @@ export default function OnboardingPage() {
         )}
         {step === 'result' && result && (
           <>
+            <Confetti />
             <h1>{t.onboardingResult}</h1>
             <div className="card center">
-              <p className="big-number">{result.level}</p>
+              <p className="big-number pop">{result.level}</p>
               <p className="muted">{t.score(result.score, result.maxScore)}</p>
             </div>
             <ErrorNote error={complete.error} />

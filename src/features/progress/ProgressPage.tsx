@@ -1,6 +1,7 @@
 import { CheckCircle2 } from 'lucide-react'
 import type { Progress } from '../../api/types'
 import { useAuth, useUser } from '../../auth/AuthContext'
+import { ThemeToggle } from '../../components/ThemeToggle'
 import { Button, QueryView, Screen, useApiQuery } from '../../components/ui'
 import { t } from '../../i18n'
 
@@ -49,8 +50,8 @@ export default function ProgressPage() {
               <section className="card stack-sm">
                 <strong>{t.last28}</strong>
                 <div className="heatmap">
-                  {lastDays(HEATMAP_DAYS).map((day) => (
-                    <span key={day} title={day} className={active.has(day) ? 'cell on' : 'cell'} />
+                  {lastDays(HEATMAP_DAYS).map((day, i) => (
+                    <span key={day} title={day} className={active.has(day) ? 'cell on' : 'cell'} style={{ animationDelay: `${i * 18}ms` }} />
                   ))}
                 </div>
               </section>
@@ -71,7 +72,10 @@ export default function ProgressPage() {
               </section>
 
               <section className="card stack-sm">
-                <strong>{t.account}</strong>
+                <div className="row between">
+                  <strong>{t.account}</strong>
+                  <ThemeToggle />
+                </div>
                 <p className="muted small">{user.displayName} · {user.email}</p>
                 {user.level && <p className="muted small">{t.level}: {user.level}</p>}
                 <Button onClick={() => void logout()}>{t.signOut}</Button>

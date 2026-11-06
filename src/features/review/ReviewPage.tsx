@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { api } from '../../api/client'
 import type { ReviewAnswer, ReviewCard } from '../../api/types'
+import { Confetti } from '../../components/Confetti'
 import { Button, ErrorNote, ListenButton, ProgressBar, QueryView, Screen } from '../../components/ui'
 import { t } from '../../i18n'
 
@@ -28,6 +29,7 @@ function ReviewSession({ cards }: { cards: ReviewCard[] }) {
   if (!card) {
     return (
       <div className="center stack">
+        <Confetti />
         <p className="prompt">{t.reviewDone}</p>
         {lastInterval !== null && <p className="muted">{t.nextReview(lastInterval)}</p>}
         <Link className="btn btn-primary" to="/">{t.home}</Link>

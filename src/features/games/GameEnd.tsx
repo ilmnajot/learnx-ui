@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router'
 import { api } from '../../api/client'
 import type { GameName, GameResult } from '../../api/types'
+import { Confetti } from '../../components/Confetti'
 import { Button, ErrorNote } from '../../components/ui'
 import { t } from '../../i18n'
 
@@ -31,8 +32,9 @@ export function GameEnd({ game, correct, total, onReplay }: Props) {
 
   return (
     <div className="center stack">
+      {correct > 0 && <Confetti />}
       <p className="prompt">{t.gameOver}</p>
-      <p className="big-number">{correct} / {total}</p>
+      <p className="big-number pop">{correct} / {total}</p>
       {save.data && (
         <p className={save.data.points > 0 ? 'ok' : 'muted'}>
           {save.data.points > 0 ? t.pointsEarned(save.data.points) : correct === 0 ? t.tryAgain : t.dailyLimitReached}

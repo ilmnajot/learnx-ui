@@ -1,7 +1,21 @@
 import { useState, type FormEvent } from 'react'
 import { useAuth } from '../../auth/AuthContext'
+import { ThemeToggle } from '../../components/ThemeToggle'
 import { Button, ErrorNote } from '../../components/ui'
 import { t } from '../../i18n'
+
+function TerminalDemo() {
+  return (
+    <div className="terminal" aria-hidden>
+      <div className="terminal-bar"><i /><i /><i /><span>standup.sh</span></div>
+      <p className="line l1"><b>$</b> say "it is not finish"</p>
+      <p className="line l2 warn">! 1 grammar issue found</p>
+      <p className="line l3"><b>$</b> learnx fix --speak</p>
+      <p className="line l4 good">It's taking longer than expected.</p>
+      <p className="line l5 good">build passed: confidence +1<span className="caret" /></p>
+    </div>
+  )
+}
 
 export function AuthPage() {
   const { login, register } = useAuth()
@@ -29,11 +43,15 @@ export function AuthPage() {
   return (
     <main className="auth">
       <section className="auth-intro">
-        <p className="brand"><span aria-hidden>&gt;_</span> {t.appName}</p>
+        <div className="row between">
+          <p className="brand"><span aria-hidden>&gt;_</span> {t.appName}</p>
+          <ThemeToggle />
+        </div>
         <h1>{t.tagline}</h1>
         <p className="muted">{t.subTagline}</p>
+        <TerminalDemo />
       </section>
-      <form className="card stack" onSubmit={submit}>
+      <form className="card stack auth-form" onSubmit={submit}>
         <h2>{signingUp ? t.signUp : t.signIn}</h2>
         {signingUp && (
           <label className="field">

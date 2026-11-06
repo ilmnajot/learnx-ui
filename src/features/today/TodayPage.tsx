@@ -1,9 +1,32 @@
-import { Flame, PenLine, RefreshCw } from 'lucide-react'
+import { ArrowRight, BatteryLow, Clock, Flame, Mic, PenLine, RefreshCw, Sparkles } from 'lucide-react'
+import type { CSSProperties } from 'react'
 import { Link } from 'react-router'
 import type { Today } from '../../api/types'
 import { useUser } from '../../auth/AuthContext'
-import { ProgressBar, QueryView, Screen, useApiQuery } from '../../components/ui'
+import { ThemeToggle } from '../../components/ThemeToggle'
+import { QueryView, Screen, useApiQuery } from '../../components/ui'
 import { t } from '../../i18n'
+
+function ProgressRing({ done, total }: { done: number; total: number }) {
+  const radius = 26
+  const circumference = 2 * Math.PI * radius
+  const ratio = done / Math.max(total, 1)
+  return (
+    <svg className="ring" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label={`${done} / ${total}`}>
+      <circle className="ring-track" cx="32" cy="32" r={radius} />
+      <circle
+        className="ring-fill"
+        cx="32"
+        cy="32"
+        r={radius}
+        strokeDasharray={circumference}
+        strokeDashoffset={circumference * (1 - ratio)}
+        style={{ '--ring-from': `${circumference}` } as CSSProperties}
+      />
+      <text x="32" y="37" textAnchor="middle">{done}</text>
+    </svg>
+  )
+}
 
 export default function TodayPage() {
   const user = useUser()
@@ -16,46 +39,62 @@ export default function TodayPage() {
           <div className="stack">
             <header className="row between">
               <h1>{t.greeting(user.displayName)}</h1>
-              <span className="pill"><Flame size={16} aria-hidden /> {t.streakDays(today.streak)}</span>
+              <div className="row gap-sm">
+                <span className={today.streak > 0 ? 'pill flame lit' : 'pill flame'}>
+                  <Flame size={16} aria-hidden /> {t.streakDays(today.streak)}
+                </span>
+                <ThemeToggle />
+              </div>
             </header>
 
             {today.nextLesson ? (
-              <section className="card hero stack-sm">
-                <span className="eyebrow">{t.todaySituation}</span>
+              <section className="hero-card">
+                <span className="glyph g1" aria-hidden>&gt;_</span>
+                <span className="glyph g2" aria-hidden>{'{ }'}</span>
+                <span className="glyph g3" aria-hidden>&lt;/&gt;</span>
+                <span className="hero-tag"><Sparkles size={14} aria-hidden /> {t.todaySituation}</span>
                 <h2>{today.nextLesson.title}</h2>
-                <p className="muted">{t.lessonMeta(today.nextLesson.estMinutes)}</p>
-                <Link className="btn btn-primary" to={`/lessons/${today.nextLesson.id}`}>{t.startLesson}</Link>
+                <p className="hero-meta">
+                  <span><Clock size={14} aria-hidden /> {today.nextLesson.estMinutes} {t.minutes}</span>
+                  <span><Mic size={14} aria-hidden /> {t.roleplayShort}</span>
+                </p>
+                <Link className="btn btn-hero" to={`/lessons/${today.nextLesson.id}`}>
+                  {t.startLesson} <ArrowRight size={18} aria-hidden />
+                </Link>
               </section>
             ) : (
-              <section className="card hero"><p>{t.courseComplete}</p></section>
+              <section className="hero-card"><p>{t.courseComplete}</p></section>
             )}
 
             <Link className="tired" to={today.dueReviews > 0 ? '/review?limit=3' : '/games/match?size=4'}>
-              {t.tiredOption}
+              <BatteryLow size={16} aria-hidden /> {t.tiredOption}
             </Link>
 
             {today.dueReviews > 0 && (
-              <Link className="card row between link-card" to="/review">
-                <span><RefreshCw size={16} aria-hidden /> {t.phrasesDue(today.dueReviews)}</span>
-                <span className="link-text">{t.review}</span>
+              <Link className="card row gap link-card" to="/review">
+                <span className="chip amber"><RefreshCw size={20} aria-hidden /></span>
+                <span className="grow">{t.phrasesDue(today.dueReviews)}</span>
+                <ArrowRight size={18} className="muted arrow" aria-hidden />
               </Link>
             )}
 
-            <section className="card stack-sm">
-              <div className="row between">
+            <section className="card row gap">
+              <ProgressRing done={today.completedLessons} total={today.totalLessons} />
+              <div className="grow stack-xs">
                 <strong>{t.courseProgress}</strong>
-                <span className="muted mono">{today.completedLessons} / {today.totalLessons}</span>
+                <span className="muted small">{today.completedLessons} / {today.totalLessons}</span>
+                {today.latestCanDo && <span className="muted small">{today.latestCanDo}</span>}
               </div>
-              <ProgressBar percent={(today.completedLessons / Math.max(today.totalLessons, 1)) * 100} label={t.courseProgress} />
-              {today.latestCanDo && <p className="muted small">{t.latestSkill}: {today.latestCanDo}</p>}
             </section>
 
-            <Link className="card row between link-card" to="/writing">
-              <span>
-                <strong><PenLine size={16} aria-hidden /> {t.fixMessage}</strong>
+            <Link className="card row gap link-card" to="/writing">
+              <span className="chip violet"><PenLine size={20} aria-hidden /></span>
+              <span className="grow">
+                <strong>{t.fixMessage}</strong>
                 <br />
                 <span className="muted small">{t.fixMessageHint}</span>
               </span>
+              <ArrowRight size={18} className="muted arrow" aria-hidden />
             </Link>
           </div>
         )}

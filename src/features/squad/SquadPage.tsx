@@ -4,8 +4,10 @@ import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { api } from '../../api/client'
 import type { Squad } from '../../api/types'
-import { Button, ErrorNote, ProgressBar, QueryView, Screen, useApiQuery } from '../../components/ui'
+import { Button, ErrorNote, QueryView, Screen, useApiQuery } from '../../components/ui'
 import { t } from '../../i18n'
+
+const RACK_LIGHTS = Array.from({ length: 12 }, (_, i) => i)
 
 function initials(name: string): string {
   return name.trim().slice(0, 2).toUpperCase()
@@ -93,7 +95,15 @@ function SquadBoard({ squad }: { squad: Squad }) {
           <strong>{t.systemRestored}</strong>
           <span className="mono">{incident.progressPercent}%</span>
         </div>
-        <ProgressBar percent={incident.progressPercent} label={t.systemRestored} />
+        <div className="rack" role="progressbar" aria-valuenow={incident.progressPercent} aria-valuemin={0} aria-valuemax={100} aria-label={t.systemRestored}>
+          {RACK_LIGHTS.map((i) => (
+            <span
+              key={i}
+              className={(i + 1) * 100 <= incident.progressPercent * RACK_LIGHTS.length ? 'light on' : 'light'}
+              style={{ animationDelay: `${i * 90}ms` }}
+            />
+          ))}
+        </div>
         <p className="muted small">
           {t.todayPractised(squad.practisedToday, squad.members.length)}:{' '}
           {squad.streakSafeToday ? t.streakSafe : t.streakNeeds(squad.requiredToday)}

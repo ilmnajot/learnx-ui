@@ -57,7 +57,13 @@ export function ErrorNote({ error }: { error: unknown }) {
 
 /** Renders loading and failure states, so screens only describe their success state. */
 export function QueryView<T>({ query, children }: { query: UseQueryResult<T>; children: (data: T) => ReactNode }) {
-  if (query.isPending) return <p className="muted center pad">{t.loading}</p>
+  if (query.isPending) {
+    return (
+      <div className="skeletons" role="status" aria-label={t.loading}>
+        <div /><div /><div />
+      </div>
+    )
+  }
   if (query.isError) {
     return (
       <div className="center pad stack">

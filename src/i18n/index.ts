@@ -1,6 +1,13 @@
 /** All interface text. To add Russian, create a dictionary with the same keys and select it here. */
 export const t = {
   appName: 'LearnX',
+  darkMode: 'Tungi rejim',
+  lightMode: 'Oq rejim',
+  minutes: 'daqiqa',
+  roleplayShort: 'rolli suhbat',
+  stepLearn: 'Oʻrganish',
+  stepRecall: 'Eslash',
+  stepSpeak: 'Gapirish',
   tagline: 'Hujjatlarni oʻqiy olasiz. Endi yigʻilishda gapiring.',
   subTagline: 'IT mutaxassislari uchun kuniga 5 daqiqalik ingliz tili mashqi.',
 

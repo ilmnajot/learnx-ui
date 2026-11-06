@@ -1,16 +1,21 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { CheckCircle2 } from 'lucide-react'
+import { BookOpen, Brain, CheckCircle2, Mic, type LucideIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { api } from '../../api/client'
 import type { LessonDetail, Phrase } from '../../api/types'
-import { Button, ErrorNote, ListenButton, ProgressBar, QueryView, Screen, useApiQuery } from '../../components/ui'
+import { Confetti } from '../../components/Confetti'
+import { Button, ErrorNote, ListenButton, QueryView, Screen, useApiQuery } from '../../components/ui'
 import { t } from '../../i18n'
 import { RoleplayStep } from './RoleplayStep'
 
 type Step = 'learn' | 'recall' | 'roleplay' | 'done'
 
-const STEP_PROGRESS: Record<Step, number> = { learn: 10, recall: 35, roleplay: 65, done: 100 }
+const STEPS: { id: Step; icon: LucideIcon; label: string }[] = [
+  { id: 'learn', icon: BookOpen, label: t.stepLearn },
+  { id: 'recall', icon: Brain, label: t.stepRecall },
+  { id: 'roleplay', icon: Mic, label: t.stepSpeak },
+]
 
 function LearnStep({ phrases, onNext }: { phrases: Phrase[]; onNext: () => void }) {
   return (
@@ -89,7 +94,17 @@ export default function LessonPage() {
       <QueryView query={query}>
         {({ lesson, phrases }) => (
           <div className="stack">
-            <ProgressBar percent={STEP_PROGRESS[step]} label={lesson.title} />
+            <ol className="steps" aria-label={lesson.title}>
+              {STEPS.map(({ id: stepId, icon: Icon, label }, i) => {
+                const state = i < STEPS.findIndex((s) => s.id === step) || step === 'done' ? 'past' : stepId === step ? 'now' : ''
+                return (
+                  <li key={stepId} className={`step ${state}`} aria-current={stepId === step ? 'step' : undefined}>
+                    <span className="step-dot"><Icon size={16} aria-hidden /></span>
+                    <span>{label}</span>
+                  </li>
+                )
+              })}
+            </ol>
             {step !== 'done' && <h2>{lesson.title}</h2>}
             {step === 'learn' && <LearnStep phrases={phrases} onNext={() => setStep('recall')} />}
             {step === 'recall' && <RecallStep phrases={phrases} onNext={() => setStep('roleplay')} />}
@@ -101,7 +116,8 @@ export default function LessonPage() {
             )}
             {step === 'done' && (
               <div className="center stack">
-                <CheckCircle2 size={48} className="ok self-center" aria-hidden />
+                <Confetti />
+                <CheckCircle2 size={56} className="ok self-center pop" aria-hidden />
                 <p className="prompt">{lesson.canDo}</p>
                 <p className="muted">{t.phrasesScheduled}</p>
                 <Link className="btn btn-primary" to="/">{t.home}</Link>

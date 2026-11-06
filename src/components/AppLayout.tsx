@@ -17,7 +17,7 @@ export function AppLayout() {
       <nav className="tabs" aria-label={t.appName}>
         {TABS.map(({ to, label, icon: Icon, end }) => (
           <NavLink key={to} to={to} end={end} className={({ isActive }) => (isActive ? 'tab active' : 'tab')}>
-            <Icon size={20} aria-hidden />
+            <span className="tab-icon"><Icon size={20} aria-hidden /></span>
             <span>{label}</span>
           </NavLink>
         ))}

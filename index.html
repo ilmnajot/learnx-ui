@@ -1,13 +1,19 @@
 <!doctype html>
-<html lang="uz">
+<html lang="uz" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#0f7a5a" />
+    <meta name="theme-color" content="#ffffff" />
     <meta name="description" content="IT mutaxassislari uchun kuniga 5 daqiqalik ingliz tili mashqi." />
     <title>LearnX</title>
+    <script>
+      // Applies a saved dark theme before first paint, so it never flashes white.
+      try {
+        if (localStorage.getItem('learnx-theme') === 'dark') document.documentElement.dataset.theme = 'dark'
+      } catch {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

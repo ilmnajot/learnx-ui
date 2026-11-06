@@ -91,6 +91,12 @@ export function RoleplayStep({ lessonId, onFinished }: { lessonId: string; onFin
         </div>
       ))}
 
+      {send.isPending && (
+        <div className="bubble coach typing" role="status" aria-label={t.checking}>
+          <span /><span /><span />
+        </div>
+      )}
+
       {finished ? (
         <Button variant="primary" onClick={onFinished}>{t.completeLesson}</Button>
       ) : (
