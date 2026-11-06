@@ -2,6 +2,27 @@
 export const landing = {
   navLogin: 'Kirish',
   navStart: 'Boshlash',
+  navApp: 'Ilovaga oʻtish',
+
+  statsTitle: 'Hamjamiyatimiz raqamlarda',
+  statsText: 'Bular oʻquvchilarimizning haqiqiy natijalari.',
+  statLearners: 'oʻquvchi',
+  statActive: 'shu hafta faol',
+  statLessons: 'tugatilgan dars',
+  statPracticeDays: 'mashq kuni',
+  statsLevels: 'Oʻquvchilar darajasi',
+
+  commentsTitle: 'Oʻquvchilar fikri',
+  commentsEmpty: 'Birinchi boʻlib fikr qoldiring.',
+  commentsCta: 'Fikr qoldirish',
+
+  donateTitle: 'Loyihani qoʻllab-quvvatlang',
+  donateText: 'LearnX’ni rivojlantirishga yordam bermoqchi boʻlsangiz, istalgan miqdorda hissa qoʻshishingiz mumkin.',
+  donatePoints: ['AI suhbatlar xarajatlariga yordam beradi', 'Yangi dars va videolar qoʻshishga xizmat qiladi', 'Serverlar ishlashini taʼminlaydi'],
+  donateNote: 'Xayriya butunlay ixtiyoriy. U qoʻshimcha imkoniyat bermaydi va qaytarilmaydi.',
+  donateCardLabel: 'Karta raqami',
+  donateCopy: 'Karta raqamini nusxalash',
+  donateCopied: 'Nusxalandi',
   heroTag: 'IT mutaxassislari uchun',
   heroTitle: 'Hujjatlarni oʻqiy olasiz. Endi yigʻilishda gapiring.',
   heroText:
@@ -100,6 +121,8 @@ export const landing = {
         'Tanlovlaringiz: yoʻnalishingiz, maqsadingiz va darajangiz.',
         'Mashq natijalari: darslar, takrorlashlar, oʻyin natijalari, seriya va jamoa ballari.',
         'Rolli suhbatlardagi javoblaringiz matni va ularga berilgan tuzatishlar.',
+        'Qoldirgan fikringiz. Tasdiqlangach, u ismingiz, yoʻnalishingiz va darajangiz bilan bosh sahifada hammaga koʻrinadi.',
+        'Bosh sahifadagi statistika faqat umumiy sonlardan iborat va hech kimni aniqlab boʻlmaydi.',
       ],
     },
     {

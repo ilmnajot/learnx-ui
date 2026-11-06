@@ -16,8 +16,10 @@ import {
 } from 'lucide-react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router'
+import { useAuth } from '../../auth/AuthContext'
 import { ThemeToggle } from '../../components/ThemeToggle'
 import { landing as l } from '../../i18n/landing'
+import { CommentsWall, CommunityStats, DonationSection, usePublicSite } from './CommunitySections'
 import { Hero3D } from './Hero3D'
 import './landing.css'
 
@@ -97,6 +99,8 @@ function Demo() {
 
 export default function LandingPage() {
   const contact = import.meta.env.VITE_CONTACT_EMAIL as string | undefined
+  const { data: site } = usePublicSite()
+  const { status } = useAuth()
 
   return (
     <div className="landing">
@@ -105,8 +109,14 @@ export default function LandingPage() {
           <Link to="/" className="brand"><span aria-hidden>&gt;_</span> LearnX</Link>
           <nav className="row gap-sm">
             <ThemeToggle />
-            <Link to="/signin?mode=signin" className="btn btn-ghost lp-login">{l.navLogin}</Link>
-            <Link to="/signin" className="btn btn-primary lp-start">{l.navStart}</Link>
+            {status === 'signedIn' ? (
+              <Link to="/" className="btn btn-primary lp-start">{l.navApp}</Link>
+            ) : (
+              <>
+                <Link to="/signin?mode=signin" className="btn btn-ghost lp-login">{l.navLogin}</Link>
+                <Link to="/signin" className="btn btn-primary lp-start">{l.navStart}</Link>
+              </>
+            )}
           </nav>
         </div>
       </header>
@@ -209,6 +219,18 @@ export default function LandingPage() {
           </Reveal>
         </section>
 
+        {site?.stats && (
+          <section className="lp-section">
+            <Reveal className="lp-inner"><CommunityStats stats={site.stats} /></Reveal>
+          </section>
+        )}
+
+        {site && (site.comments.length > 0 || site.commentsEnabled) && (
+          <section className="lp-section tinted">
+            <Reveal className="lp-inner"><CommentsWall site={site} /></Reveal>
+          </section>
+        )}
+
         <section className="lp-section">
           <Reveal className="lp-inner center">
             <h2>{l.topicsTitle}</h2>
@@ -217,6 +239,12 @@ export default function LandingPage() {
             </ul>
           </Reveal>
         </section>
+
+        {site?.donation && (
+          <section className="lp-section tinted">
+            <Reveal className="lp-inner"><DonationSection donation={site.donation} /></Reveal>
+          </section>
+        )}
 
         <section className="lp-section">
           <Reveal className="lp-inner">

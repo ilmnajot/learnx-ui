@@ -1,4 +1,5 @@
-import { CheckCircle2 } from 'lucide-react'
+import { CheckCircle2, Globe, MessageSquarePlus, ShieldCheck } from 'lucide-react'
+import { Link } from 'react-router'
 import type { Progress } from '../../api/types'
 import { useAuth, useUser } from '../../auth/AuthContext'
 import { ThemeToggle } from '../../components/ThemeToggle'
@@ -78,6 +79,11 @@ export default function ProgressPage() {
                 </div>
                 <p className="muted small">{user.displayName} · {user.email}</p>
                 {user.level && <p className="muted small">{t.level}: {user.level}</p>}
+                {user.admin && (
+                  <Link to="/admin" className="btn btn-primary"><ShieldCheck size={16} aria-hidden /> {t.adminPanel}</Link>
+                )}
+                <Link to="/feedback" className="btn btn-secondary"><MessageSquarePlus size={16} aria-hidden /> {t.feedbackTitle}</Link>
+                <Link to="/about" className="btn btn-secondary"><Globe size={16} aria-hidden /> {t.aboutLink}</Link>
                 <Button onClick={() => void logout()}>{t.signOut}</Button>
               </section>
             </div>

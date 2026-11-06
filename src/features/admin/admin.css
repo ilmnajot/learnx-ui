@@ -1,0 +1,21 @@
+.ad-shell .screen { max-width: 860px; }
+.ad-tabs { display: flex; gap: 6px; margin-bottom: 18px; padding-bottom: 4px; overflow-x: auto; scrollbar-width: thin; }
+.ad-tabs .filter { display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.ad-metrics { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.ad-bar-row { display: grid; grid-template-columns: 36px minmax(0, 1fr) 46px; align-items: center; gap: 8px; }
+.ad-bar { height: 10px; overflow: hidden; background: var(--surface-2); border-radius: 5px; }
+.ad-bar div { height: 100%; background: var(--accent); border-radius: 5px; }
+.ad-chart { display: flex; align-items: flex-end; gap: 3px; height: 120px; }
+.ad-chart div { flex: 1; min-width: 3px; background: var(--accent); border-radius: 3px 3px 0 0; }
+.ad-list { display: flex; flex-direction: column; gap: 10px; }
+.ad-row { display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.ad-row.wrap { flex-wrap: wrap; }
+.ad-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.ad-actions .btn { min-height: 36px; padding: 4px 11px; font-size: 0.82rem; }
+.ad-break { overflow-wrap: anywhere; }
+.ad-stars { display: inline-flex; gap: 1px; color: #d98a00; }
+.ad-stars svg { fill: currentColor; }
+.ad-check { display: flex; align-items: center; gap: 9px; font-size: 0.95rem; font-weight: 550; cursor: pointer; }
+.ad-check input { width: 18px; height: 18px; accent-color: var(--accent); }
+.row.wrap { flex-wrap: wrap; }
+.danger-tag { color: var(--danger); background: var(--danger-soft); }

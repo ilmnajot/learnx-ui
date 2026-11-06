@@ -24,10 +24,18 @@ const ProgressPage = lazy(() => import('./features/progress/ProgressPage'))
 const VerifyEmailPage = lazy(() => import('./features/account/AccountPages').then((m) => ({ default: m.VerifyEmailPage })))
 const ForgotPasswordPage = lazy(() => import('./features/account/AccountPages').then((m) => ({ default: m.ForgotPasswordPage })))
 const ResetPasswordPage = lazy(() => import('./features/account/AccountPages').then((m) => ({ default: m.ResetPasswordPage })))
+const AdminPage = lazy(() => import('./features/admin/AdminPage'))
+const FeedbackPage = lazy(() => import('./features/feedback/FeedbackPage'))
 const LandingPage = lazy(() => import('./features/landing/LandingPage'))
 const PrivacyPage = lazy(() => import('./features/landing/PrivacyPage'))
 
 const Loading = () => <p className="muted center pad">{t.loading}</p>
+
+/** Hides the panel from non-admins. The real protection is on the server, which checks every admin request. */
+function AdminOnly({ children }: { children: ReactNode }) {
+  const { user } = useAuth()
+  return user?.admin ? children : <Navigate to="/" replace />
+}
 
 function Protected({ children }: { children: ReactNode }) {
   const { status, user } = useAuth()
@@ -45,6 +53,9 @@ export function App() {
       <Routes>
         {status === 'signedOut' && <Route index element={<LandingPage />} />}
         <Route path="privacy" element={<PrivacyPage />} />
+        <Route path="about" element={<LandingPage />} />
+        <Route path="feedback" element={<Protected><FeedbackPage /></Protected>} />
+        <Route path="admin" element={<Protected><AdminOnly><AdminPage /></AdminOnly></Protected>} />
         <Route path="verify-email" element={<VerifyEmailPage />} />
         <Route path="forgot-password" element={<ForgotPasswordPage />} />
         <Route path="reset-password" element={<ResetPasswordPage />} />

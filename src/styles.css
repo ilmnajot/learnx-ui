@@ -250,6 +250,13 @@ textarea { resize: vertical; }
 .word:disabled { opacity: 0.3; box-shadow: none; cursor: default; }
 .word.placed:disabled { opacity: 1; }
 
+/* Feedback */
+.rating { display: flex; gap: 4px; }
+.rating-star { display: inline-flex; padding: 4px; color: var(--line); background: none; border: 0; cursor: pointer; transition: transform 160ms var(--spring), color 160ms; }
+.rating-star:hover { transform: scale(1.15); }
+.rating-star.on { color: #d98a00; }
+.rating-star.on svg { fill: currentColor; }
+
 /* Account */
 .email-banner { display: flex; align-items: center; gap: 10px; max-width: 560px; margin: 12px auto 0; padding: 10px 14px; width: calc(100% - 32px); font-size: 0.875rem; color: var(--warn-text); background: var(--warn-soft); border-radius: 12px; overflow-wrap: anywhere; }
 .email-banner + .screen { padding-top: 12px; }

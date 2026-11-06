@@ -17,6 +17,7 @@ const USER: User = {
   timezone: 'Asia/Tashkent',
   onboarded: true,
   emailVerified: false,
+  admin: false,
 }
 
 type Handler = (path: string, init?: RequestInit) => Response

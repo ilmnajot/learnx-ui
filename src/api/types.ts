@@ -9,6 +9,48 @@ export interface User {
   timezone: string
   onboarded: boolean
   emailVerified: boolean
+  admin: boolean
+}
+
+export interface PublicStats {
+  totals: {
+    learners: number
+    activeThisWeek: number
+    lessonsCompleted: number
+    practiceDays: number
+    squads: number
+  }
+  levels: { level: string; learners: number }[]
+}
+
+export interface PublicComment {
+  id: string
+  displayName: string
+  jobRole?: string | null
+  level?: string | null
+  body: string
+  rating: number
+  updatedAt: string
+}
+
+export interface PublicDonation {
+  card: string
+  holder?: string
+  message?: string
+}
+
+export interface PublicSite {
+  stats?: PublicStats
+  comments: PublicComment[]
+  commentsEnabled: boolean
+  donation?: PublicDonation
+}
+
+export interface OwnComment {
+  body: string
+  rating: number
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  updatedAt: string
 }
 
 export interface AuthResponse {
