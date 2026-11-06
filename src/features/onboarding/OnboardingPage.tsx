@@ -1,0 +1,118 @@
+import { useMutation } from '@tanstack/react-query'
+import { useState } from 'react'
+import { api } from '../../api/client'
+import type { PlacementQuestion, PlacementResult, User } from '../../api/types'
+import { useAuth } from '../../auth/AuthContext'
+import { Button, ErrorNote, ProgressBar, QueryView, Screen, useApiQuery } from '../../components/ui'
+import { t } from '../../i18n'
+
+type Step = 'role' | 'goal' | 'placement' | 'result'
+
+function Choices({ options, onPick }: { options: readonly string[]; onPick: (value: string) => void }) {
+  return (
+    <div className="stack">
+      {options.map((option) => (
+        <Button key={option} className="choice" onClick={() => onPick(option)}>
+          {option}
+        </Button>
+      ))}
+    </div>
+  )
+}
+
+function Placement({ onDone }: { onDone: (result: PlacementResult) => void }) {
+  const query = useApiQuery<PlacementQuestion[]>(['placement'], '/placement/questions')
+  const [index, setIndex] = useState(0)
+  const [answers, setAnswers] = useState<{ questionId: string; selectedIndex: number }[]>([])
+  const submit = useMutation({
+    mutationFn: (body: typeof answers) =>
+      api<PlacementResult>('/placement/submit', { method: 'POST', body: { answers: body } }),
+    onSuccess: onDone,
+  })
+
+  return (
+    <QueryView query={query}>
+      {(questions) => {
+        const question = questions[index]
+        if (!question) return <ErrorNote error={submit.error} />
+        return (
+          <div className="stack">
+            <p className="muted">{t.onboardingPlacementHint}</p>
+            <ProgressBar percent={(index / questions.length) * 100} label={t.onboardingPlacement} />
+            <p className="prompt">{question.prompt}</p>
+            <div className="stack">
+              {question.options.map((option, optionIndex) => (
+                <Button
+                  key={option}
+                  className="choice"
+                  disabled={submit.isPending}
+                  onClick={() => {
+                    const next = [...answers, { questionId: question.id, selectedIndex: optionIndex }]
+                    setAnswers(next)
+                    if (index + 1 < questions.length) setIndex(index + 1)
+                    else submit.mutate(next)
+                  }}
+                >
+                  {option}
+                </Button>
+              ))}
+            </div>
+            <ErrorNote error={submit.error} />
+          </div>
+        )
+      }}
+    </QueryView>
+  )
+}
+
+export default function OnboardingPage() {
+  const { setUser } = useAuth()
+  const [step, setStep] = useState<Step>('role')
+  const [jobRole, setJobRole] = useState('')
+  const [goal, setGoal] = useState('')
+  const [result, setResult] = useState<PlacementResult | null>(null)
+
+  const complete = useMutation({
+    mutationFn: () => api<User>('/me', { method: 'PATCH', body: { jobRole, goal, onboarded: true } }),
+    onSuccess: setUser,
+  })
+
+  return (
+    <Screen>
+      <div className="narrow stack">
+        <p className="brand"><span aria-hidden>&gt;_</span> {t.appName}</p>
+        {step === 'role' && (
+          <>
+            <h1>{t.onboardingRole}</h1>
+            <Choices options={t.roles} onPick={(value) => { setJobRole(value); setStep('goal') }} />
+          </>
+        )}
+        {step === 'goal' && (
+          <>
+            <h1>{t.onboardingGoal}</h1>
+            <Choices options={t.goals} onPick={(value) => { setGoal(value); setStep('placement') }} />
+          </>
+        )}
+        {step === 'placement' && (
+          <>
+            <h1>{t.onboardingPlacement}</h1>
+            <Placement onDone={(r) => { setResult(r); setStep('result') }} />
+          </>
+        )}
+        {step === 'result' && result && (
+          <>
+            <h1>{t.onboardingResult}</h1>
+            <div className="card center">
+              <p className="big-number">{result.level}</p>
+              <p className="muted">{t.score(result.score, result.maxScore)}</p>
+            </div>
+            <ErrorNote error={complete.error} />
+            <Button variant="primary" disabled={complete.isPending} onClick={() => complete.mutate()}>
+              {t.onboardingStart}
+            </Button>
+          </>
+        )}
+      </div>
+    </Screen>
+  )
+}

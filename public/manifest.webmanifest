@@ -1,0 +1,10 @@
+{
+  "name": "LearnX",
+  "short_name": "LearnX",
+  "description": "IT mutaxassislari uchun kuniga 5 daqiqalik ingliz tili mashqi.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f5f0",
+  "theme_color": "#0f7a5a",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

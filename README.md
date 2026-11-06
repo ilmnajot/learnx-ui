@@ -1,16 +1,45 @@
-# React + Vite
+# LearnX UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Mobile-first web app for LearnX, daily 5-minute English practice for IT professionals.
 
-Currently, two official plugins are available:
+React 19, TypeScript, Vite, React Router, TanStack Query.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run locally
 
-## React Compiler
+Start [learnx-api](../learnx-api) first, then:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the Oxlint configuration
+Open <http://localhost:5173>. The dev server proxies `/api` to the backend on port 8080.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Check
+
+```bash
+npm run typecheck
+npm test
+npm run lint
+npm run build
+```
+
+## Structure
+
+| Folder | Contents |
+|---|---|
+| `src/api` | HTTP client with transparent token refresh, and API types |
+| `src/auth` | Session state |
+| `src/components` | Shared layout and UI |
+| `src/features` | One folder per screen or feature |
+| `src/i18n` | All interface text; add a language by adding a dictionary with the same keys |
+
+Decisions worth keeping:
+
+- **Tokens stay out of reach of scripts.** The access token lives in memory and the refresh token is an HttpOnly cookie.
+- **Refreshes never overlap.** Refresh tokens rotate and reuse revokes sessions, so refreshing is serialised across tabs with the Web Locks API.
+- **Speech uses the browser's recognition**, with typing as the fallback. It works in Chrome, Edge and Safari but not Firefox, and browsers may send audio to their vendor's servers.
+
+## Production
+
+`npm run build` outputs static files to `dist/`. Serve them with `/api` routed to the backend on the same origin, so the `SameSite=Strict` refresh cookie is sent. Routes need to fall back to `index.html`.

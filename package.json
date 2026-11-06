@@ -5,12 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "lint": "oxlint",
-    "preview": "vite preview"
+    "build": "tsc --noEmit && vite build",
+    "lint": "oxlint src",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.106.1",
+    "lucide-react": "^0.500.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-router": "^7.18.5"
@@ -26,6 +29,6 @@
     "oxlint": "^1.90.0",
     "typescript": "^5.9.3",
     "vite": "^8.3.6",
-    "vitest": "^3.2.7"
+    "vitest": "^5.1.0"
   }
 }
