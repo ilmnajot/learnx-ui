@@ -113,6 +113,7 @@ export const landing = {
       title: 'Boshqa xizmatlar',
       items: [
         'Anthropic: tuzatish va suhbat uchun yozgan yoki aytgan matningiz Claude AI xizmatiga yuboriladi. Maxfiy maʼlumot, parol yoki kompaniya kodini kiritmang.',
+        'Email xizmati: tasdiqlash va parolni tiklash xatlari emailingizga shu xizmat orqali yuboriladi.',
         'Brauzeringiz: ovozni tanish brauzer funksiyasi orqali ishlaydi va brauzer ovozni oʻz ishlab chiqaruvchisining serverlariga yuborishi mumkin.',
         'YouTube (Google): videolar YouTube pleyerida ochiladi. Videoni ishga tushirganingizda Google maʼlumot oladi, roʻyxatdagi rasmlar ham YouTube serverlaridan yuklanadi.',
       ],
@@ -120,6 +121,7 @@ export const landing = {
     {
       title: 'Cookie va brauzer xotirasi',
       items: [
+        'Suiisteʼmolning oldini olish uchun IP manzilingiz qisqa muddat saqlanadi va bir kun ichida oʻchiriladi.',
         'Hisobingizda qolishingiz uchun bitta xavfsiz cookie ishlatamiz.',
         'Oq yoki tungi rejim tanlovingiz brauzeringizda saqlanadi.',
         'Reklama uchun cookie ishlatmaymiz.',

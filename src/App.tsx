@@ -21,6 +21,9 @@ const SquadPage = lazy(() => import('./features/squad/SquadPage'))
 const WritingPage = lazy(() => import('./features/writing/WritingPage'))
 const ProgressPage = lazy(() => import('./features/progress/ProgressPage'))
 
+const VerifyEmailPage = lazy(() => import('./features/account/AccountPages').then((m) => ({ default: m.VerifyEmailPage })))
+const ForgotPasswordPage = lazy(() => import('./features/account/AccountPages').then((m) => ({ default: m.ForgotPasswordPage })))
+const ResetPasswordPage = lazy(() => import('./features/account/AccountPages').then((m) => ({ default: m.ResetPasswordPage })))
 const LandingPage = lazy(() => import('./features/landing/LandingPage'))
 const PrivacyPage = lazy(() => import('./features/landing/PrivacyPage'))
 
@@ -42,6 +45,9 @@ export function App() {
       <Routes>
         {status === 'signedOut' && <Route index element={<LandingPage />} />}
         <Route path="privacy" element={<PrivacyPage />} />
+        <Route path="verify-email" element={<VerifyEmailPage />} />
+        <Route path="forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="reset-password" element={<ResetPasswordPage />} />
         <Route
           path="/signin"
           element={status === 'signedIn' ? <Navigate to="/" replace /> : status === 'loading' ? <Loading /> : <AuthPage />}

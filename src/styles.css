@@ -250,6 +250,11 @@ textarea { resize: vertical; }
 .word:disabled { opacity: 0.3; box-shadow: none; cursor: default; }
 .word.placed:disabled { opacity: 1; }
 
+/* Account */
+.email-banner { display: flex; align-items: center; gap: 10px; max-width: 560px; margin: 12px auto 0; padding: 10px 14px; width: calc(100% - 32px); font-size: 0.875rem; color: var(--warn-text); background: var(--warn-soft); border-radius: 12px; overflow-wrap: anywhere; }
+.email-banner + .screen { padding-top: 12px; }
+.email-banner .link { color: inherit; white-space: nowrap; }
+
 /* Shadowing */
 .sentence-line { font-size: 1.25rem; font-weight: 650; line-height: 1.5; }
 .said { transition: color 180ms; }

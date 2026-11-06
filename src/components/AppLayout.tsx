@@ -1,5 +1,6 @@
 import { BarChart3, BookOpen, Clapperboard, Gamepad2, Home, Users } from 'lucide-react'
 import { NavLink, Outlet } from 'react-router'
+import { EmailBanner } from '../features/account/EmailBanner'
 import { t } from '../i18n'
 
 const TABS = [
@@ -14,6 +15,7 @@ const TABS = [
 export function AppLayout() {
   return (
     <div className="app">
+      <EmailBanner />
       <Outlet />
       <nav className="tabs" aria-label={t.appName}>
         {TABS.map(({ to, label, icon: Icon, end }) => (

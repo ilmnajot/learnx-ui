@@ -8,6 +8,7 @@ export interface User {
   nativeLanguage: string
   timezone: string
   onboarded: boolean
+  emailVerified: boolean
 }
 
 export interface AuthResponse {

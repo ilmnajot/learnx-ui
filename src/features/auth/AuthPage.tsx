@@ -78,6 +78,7 @@ export function AuthPage() {
           />
           {signingUp && <small className="muted">{t.passwordHint}</small>}
         </label>
+        {!signingUp && <Link to="/forgot-password" className="link small">{t.forgotLink}</Link>}
         <ErrorNote error={error} />
         <Button type="submit" variant="primary" disabled={busy}>
           {signingUp ? t.signUp : t.signIn}
