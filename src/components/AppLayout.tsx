@@ -1,10 +1,11 @@
-import { BarChart3, BookOpen, Gamepad2, Home, Users } from 'lucide-react'
+import { BarChart3, BookOpen, Clapperboard, Gamepad2, Home, Users } from 'lucide-react'
 import { NavLink, Outlet } from 'react-router'
 import { t } from '../i18n'
 
 const TABS = [
   { to: '/', label: t.navToday, icon: Home, end: true },
   { to: '/course', label: t.navCourse, icon: BookOpen },
+  { to: '/videos', label: t.navVideos, icon: Clapperboard },
   { to: '/games', label: t.navGames, icon: Gamepad2 },
   { to: '/squad', label: t.navSquad, icon: Users },
   { to: '/progress', label: t.navProgress, icon: BarChart3 },

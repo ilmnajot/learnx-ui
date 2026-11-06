@@ -122,6 +122,30 @@ export interface GameResult {
 
 export type GameName = 'PHRASE_MATCH' | 'WORD_ORDER'
 
+export type VideoCategory = 'COMEDY' | 'INSPIRATION' | 'SPEAKING'
+
+export interface Video {
+  id: string
+  youtubeId: string
+  title: string
+  channel: string
+  category: VideoCategory
+  durationSeconds: number
+  whyWatch: string
+  speakPrompt: string
+  completedAt?: string | null
+}
+
+export interface VideoDetail {
+  video: Video
+  phrases: Phrase[]
+}
+
+export interface VideoCompletion {
+  firstCompletion: boolean
+  phrasesScheduled: number
+}
+
 export interface SquadMember {
   userId: string
   displayName: string

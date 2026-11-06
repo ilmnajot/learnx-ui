@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router'
 import { ApiError } from './api/client'
 import { App } from './App'
 import { AuthProvider } from './auth/AuthContext'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import './styles.css'
 
 const queryClient = new QueryClient({
@@ -23,7 +24,9 @@ createRoot(document.getElementById('root') as HTMLElement).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
-          <App />
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>

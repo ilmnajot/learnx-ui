@@ -1,4 +1,4 @@
-import { ArrowRight, BatteryLow, Clock, Flame, Mic, PenLine, RefreshCw, Sparkles } from 'lucide-react'
+import { ArrowRight, BatteryLow, Clapperboard, Clock, Flame, Mic, PenLine, RefreshCw, Sparkles } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router'
 import type { Today } from '../../api/types'
@@ -86,6 +86,16 @@ export default function TodayPage() {
                 {today.latestCanDo && <span className="muted small">{today.latestCanDo}</span>}
               </div>
             </section>
+
+            <Link className="card row gap link-card" to="/videos">
+              <span className="chip amber"><Clapperboard size={20} aria-hidden /></span>
+              <span className="grow">
+                <strong>{t.videosCard}</strong>
+                <br />
+                <span className="muted small">{t.videosCardHint}</span>
+              </span>
+              <ArrowRight size={18} className="muted arrow" aria-hidden />
+            </Link>
 
             <Link className="card row gap link-card" to="/writing">
               <span className="chip violet"><PenLine size={20} aria-hidden /></span>

@@ -14,6 +14,8 @@ const ReviewPage = lazy(() => import('./features/review/ReviewPage'))
 const GamesPage = lazy(() => import('./features/games/GamesPage'))
 const PhraseMatchPage = lazy(() => import('./features/games/PhraseMatchPage'))
 const WordOrderPage = lazy(() => import('./features/games/WordOrderPage'))
+const VideosPage = lazy(() => import('./features/videos/VideosPage'))
+const VideoPage = lazy(() => import('./features/videos/VideoPage'))
 const SquadPage = lazy(() => import('./features/squad/SquadPage'))
 const WritingPage = lazy(() => import('./features/writing/WritingPage'))
 const ProgressPage = lazy(() => import('./features/progress/ProgressPage'))
@@ -55,11 +57,13 @@ export function App() {
         <Route element={<Protected><AppLayout /></Protected>}>
           <Route index element={<TodayPage />} />
           <Route path="course" element={<CoursePage />} />
+          <Route path="videos" element={<VideosPage />} />
           <Route path="games" element={<GamesPage />} />
           <Route path="squad" element={<SquadPage />} />
           <Route path="progress" element={<ProgressPage />} />
         </Route>
         <Route path="lessons/:id" element={<Protected><LessonPage /></Protected>} />
+        <Route path="videos/:id" element={<Protected><VideoPage /></Protected>} />
         <Route path="review" element={<Protected><ReviewPage /></Protected>} />
         <Route path="games/match" element={<Protected><PhraseMatchPage /></Protected>} />
         <Route path="games/order" element={<Protected><WordOrderPage /></Protected>} />
