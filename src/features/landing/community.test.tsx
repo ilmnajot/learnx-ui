@@ -7,6 +7,7 @@ import { setAccessToken } from '../../api/client'
 import type { PublicSite, User } from '../../api/types'
 import { App } from '../../App'
 import { AuthProvider } from '../../auth/AuthContext'
+import { t } from '../../i18n'
 import { a } from '../../i18n/admin'
 import { landing as l } from '../../i18n/landing'
 import { formatCard } from './CommunitySections'
@@ -30,10 +31,11 @@ function json(status: number, body: unknown = {}): Response {
   return new Response(JSON.stringify(body), { status })
 }
 
-function stub(site: Partial<PublicSite> | null, user: User | null = null) {
+function stub(site: Partial<PublicSite> | null, user: User | null = null, signsInAs: User | null = null) {
   vi.stubGlobal('fetch', vi.fn<typeof fetch>(async (input) => {
     const path = String(input)
     if (path.endsWith('/auth/refresh')) return user ? json(200, { accessToken: 't', user }) : json(401)
+    if (path.endsWith('/auth/login')) return json(200, { accessToken: 't', user: signsInAs })
     if (path.endsWith('/public/site')) return site ? json(200, { ...SITE, ...site }) : json(500)
     if (path.endsWith('/admin/stats')) {
       return json(200, {
@@ -136,5 +138,33 @@ describe('admin access', () => {
     stub({})
     renderAt('/admin')
     expect(await screen.findByRole('heading', { level: 2, name: 'Roʻyxatdan oʻtish' })).toBeInTheDocument()
+  })
+
+  it('lets admins use the panel before finishing onboarding', async () => {
+    stub({}, { ...USER, admin: true, onboarded: false })
+    renderAt('/admin')
+    expect(await screen.findByRole('heading', { name: a.title })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: t.signOut })).toBeInTheDocument()
+  })
+
+  async function signIn() {
+    const user = userEvent.setup()
+    renderAt('/signin?mode=signin')
+    await user.type(await screen.findByLabelText(t.email), 'a@example.test')
+    await user.type(screen.getByLabelText(t.password), 'test-password')
+    await user.click(screen.getByRole('button', { name: t.signIn }))
+  }
+
+  it('takes admins straight to the panel after signing in', async () => {
+    stub({}, null, { ...USER, admin: true, onboarded: false })
+    await signIn()
+    expect(await screen.findByRole('heading', { name: a.title })).toBeInTheDocument()
+  })
+
+  it('takes ordinary learners to the home screen after signing in', async () => {
+    stub({}, null, USER)
+    await signIn()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Salom, Aziz' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: a.title })).toBeNull()
   })
 })

@@ -31,9 +31,14 @@ const PrivacyPage = lazy(() => import('./features/landing/PrivacyPage'))
 
 const Loading = () => <p className="muted center pad">{t.loading}</p>
 
-/** Hides the panel from non-admins. The real protection is on the server, which checks every admin request. */
-function AdminOnly({ children }: { children: ReactNode }) {
-  const { user } = useAuth()
+/**
+ * Hides the panel from non-admins. The real protection is on the server, which checks every admin request.
+ * Admins don't need to finish learner onboarding to use it.
+ */
+function AdminRoute({ children }: { children: ReactNode }) {
+  const { status, user } = useAuth()
+  if (status === 'loading') return <Loading />
+  if (status === 'signedOut') return <Navigate to="/signin" replace />
   return user?.admin ? children : <Navigate to="/" replace />
 }
 
@@ -55,13 +60,13 @@ export function App() {
         <Route path="privacy" element={<PrivacyPage />} />
         <Route path="about" element={<LandingPage />} />
         <Route path="feedback" element={<Protected><FeedbackPage /></Protected>} />
-        <Route path="admin" element={<Protected><AdminOnly><AdminPage /></AdminOnly></Protected>} />
+        <Route path="admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
         <Route path="verify-email" element={<VerifyEmailPage />} />
         <Route path="forgot-password" element={<ForgotPasswordPage />} />
         <Route path="reset-password" element={<ResetPasswordPage />} />
         <Route
           path="/signin"
-          element={status === 'signedIn' ? <Navigate to="/" replace /> : status === 'loading' ? <Loading /> : <AuthPage />}
+          element={status === 'signedIn' ? <Navigate to={user?.admin ? '/admin' : '/'} replace /> : status === 'loading' ? <Loading /> : <AuthPage />}
         />
         <Route
           path="/welcome"

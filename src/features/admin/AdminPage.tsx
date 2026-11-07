@@ -1,6 +1,8 @@
 import { BarChart3, Clapperboard, MessageSquare, ScrollText, Settings, Users, type LucideIcon } from 'lucide-react'
 import { useState, type ComponentType } from 'react'
-import { Screen, QueryView, useApiQuery } from '../../components/ui'
+import { useAuth } from '../../auth/AuthContext'
+import { Button, Screen, QueryView, useApiQuery } from '../../components/ui'
+import { t } from '../../i18n'
 import { a } from '../../i18n/admin'
 import './admin.css'
 import { CommentsTab } from './CommentsTab'
@@ -115,6 +117,7 @@ const TABS: { id: string; label: string; icon: LucideIcon; panel: ComponentType 
 ]
 
 export default function AdminPage() {
+  const { logout } = useAuth()
   const [active, setActive] = useState('overview')
   const Panel = (TABS.find((tab) => tab.id === active) ?? TABS[0])?.panel ?? OverviewTab
 
@@ -135,6 +138,7 @@ export default function AdminPage() {
           ))}
         </nav>
         <Panel />
+        <Button onClick={() => void logout()}>{t.signOut}</Button>
       </Screen>
     </div>
   )
