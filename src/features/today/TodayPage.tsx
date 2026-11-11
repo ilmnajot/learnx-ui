@@ -31,6 +31,7 @@ function ProgressRing({ done, total }: { done: number; total: number }) {
 export default function TodayPage() {
   const user = useUser()
   const query = useApiQuery<Today>(['today'], '/today')
+  const arabic = user.course === 'ARABIC_LETTERS'
 
   return (
     <Screen>
@@ -52,11 +53,11 @@ export default function TodayPage() {
                 <span className="glyph g1" aria-hidden>&gt;_</span>
                 <span className="glyph g2" aria-hidden>{'{ }'}</span>
                 <span className="glyph g3" aria-hidden>&lt;/&gt;</span>
-                <span className="hero-tag"><Sparkles size={14} aria-hidden /> {t.todaySituation}</span>
+                <span className="hero-tag"><Sparkles size={14} aria-hidden /> {arabic ? t.todayLetter : t.todaySituation}</span>
                 <h2>{today.nextLesson.title}</h2>
                 <p className="hero-meta">
                   <span><Clock size={14} aria-hidden /> {today.nextLesson.estMinutes} {t.minutes}</span>
-                  <span><Mic size={14} aria-hidden /> {t.roleplayShort}</span>
+                  {!arabic && <span><Mic size={14} aria-hidden /> {t.roleplayShort}</span>}
                 </p>
                 <Link className="btn btn-hero" to={`/lessons/${today.nextLesson.id}`}>
                   {t.startLesson} <ArrowRight size={18} aria-hidden />
@@ -87,6 +88,8 @@ export default function TodayPage() {
               </div>
             </section>
 
+            {!arabic && (
+            <>
             <Link className="card row gap link-card" to="/videos">
               <span className="chip amber"><Clapperboard size={20} aria-hidden /></span>
               <span className="grow">
@@ -106,6 +109,8 @@ export default function TodayPage() {
               </span>
               <ArrowRight size={18} className="muted arrow" aria-hidden />
             </Link>
+            </>
+            )}
           </div>
         )}
       </QueryView>

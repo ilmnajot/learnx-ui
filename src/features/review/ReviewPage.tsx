@@ -4,11 +4,13 @@ import { Link, useSearchParams } from 'react-router'
 import { api } from '../../api/client'
 import type { ReviewAnswer, ReviewCard } from '../../api/types'
 import { Confetti } from '../../components/Confetti'
+import { useUser } from '../../auth/AuthContext'
 import { Button, ErrorNote, ListenButton, ProgressBar, QueryView, Screen } from '../../components/ui'
 import { t } from '../../i18n'
 
 function ReviewSession({ cards }: { cards: ReviewCard[] }) {
   const queryClient = useQueryClient()
+  const arabic = useUser().course === 'ARABIC_LETTERS'
   const [index, setIndex] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const [lastInterval, setLastInterval] = useState<number | null>(null)
@@ -41,6 +43,23 @@ function ReviewSession({ cards }: { cards: ReviewCard[] }) {
     <div className="stack">
       <ProgressBar percent={(index / cards.length) * 100} label={t.reviewTitle} />
       <span className="muted small mono">{t.round(index + 1, cards.length)}</span>
+      {arabic ? (
+        <div className="card center stack-sm">
+          <span className="eyebrow">{t.reviewWhichLetter}</span>
+          <p className="letter-hero arabic" lang="ar" dir="rtl">{card.english}</p>
+          {revealed ? (
+            <>
+              <div className="row center-row gap">
+                <p className="answer">{card.translation}</p>
+                <ListenButton text={card.english} lang="ar-SA" />
+              </div>
+              <p className="example">{card.example}</p>
+            </>
+          ) : (
+            <p className="muted small">{t.tryAloud}</p>
+          )}
+        </div>
+      ) : (
       <div className="card center stack-sm">
         <span className="eyebrow">{t.sayInEnglish}</span>
         <p className="prompt">{card.translation}</p>
@@ -56,6 +75,7 @@ function ReviewSession({ cards }: { cards: ReviewCard[] }) {
           <p className="muted small">{t.tryAloud}</p>
         )}
       </div>
+      )}
       <ErrorNote error={answer.error} />
       {revealed ? (
         <div className="row gap">

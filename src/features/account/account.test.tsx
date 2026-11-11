@@ -8,6 +8,7 @@ import type { User } from '../../api/types'
 import { App } from '../../App'
 import { AuthProvider } from '../../auth/AuthContext'
 import { t } from '../../i18n'
+import { apiError, apiOk } from '../../test/api'
 
 const USER: User = {
   id: '1',
@@ -18,6 +19,7 @@ const USER: User = {
   onboarded: true,
   emailVerified: false,
   admin: false,
+  course: 'ENGLISH',
 }
 
 type Handler = (path: string, init?: RequestInit) => Response
@@ -29,7 +31,7 @@ function stubApi(handler: Handler) {
 }
 
 function json(status: number, body: unknown = {}): Response {
-  return new Response(JSON.stringify(body), { status })
+  return status < 400 ? apiOk(body, status) : apiError(status, (body as { code?: string }).code)
 }
 
 function renderAt(path: string, hash = '') {
@@ -57,7 +59,7 @@ describe('account pages', () => {
 
   it('confirms an email exactly once and removes the token from the address bar', async () => {
     const fetchMock = stubApi((path) => {
-      if (path.endsWith('/auth/verify-email')) return new Response(null, { status: 204 })
+      if (path.endsWith('/auth/verify-email')) return apiOk()
       return json(401)
     })
     renderAt('/verify-email', '#token=abc123')
@@ -77,7 +79,7 @@ describe('account pages', () => {
   it('shows the same message after a reset request, whatever the email', async () => {
     const user = userEvent.setup()
     const fetchMock = stubApi((path) =>
-      path.endsWith('/auth/forgot-password') ? new Response(null, { status: 202 }) : json(401))
+      path.endsWith('/auth/forgot-password') ? apiOk(undefined, 202) : json(401))
     renderAt('/forgot-password')
     await user.type(await screen.findByLabelText(t.email), 'someone@example.test')
     await user.click(screen.getByRole('button', { name: t.forgotSend }))
@@ -88,7 +90,7 @@ describe('account pages', () => {
   it('will not submit a new password until both entries match', async () => {
     const user = userEvent.setup()
     const fetchMock = stubApi((path) =>
-      path.endsWith('/auth/reset-password') ? new Response(null, { status: 204 }) : json(401))
+      path.endsWith('/auth/reset-password') ? apiOk() : json(401))
     renderAt('/reset-password', '#token=abc123')
     await user.type(await screen.findByLabelText(new RegExp(`^${t.newPassword}`)), 'brand-new-password')
     await user.type(screen.getByLabelText(t.confirmPassword), 'different')
@@ -112,7 +114,7 @@ describe('account pages', () => {
   describe('confirmation banner', () => {
     const signedIn = (user: User) => stubApi((path) => {
       if (path.endsWith('/auth/refresh')) return json(200, { accessToken: 'token', user })
-      if (path.endsWith('/me/resend-verification')) return new Response(null, { status: 202 })
+      if (path.endsWith('/me/resend-verification')) return apiOk(undefined, 202)
       return json(200, { streak: 0, dueReviews: 0, completedLessons: 0, totalLessons: 30 })
     })
 

@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { ReviewCard } from '../../api/types'
 import { sameSentence, scramble, tokenize } from './gameLogic'
 import { PhraseMatchBoard } from './PhraseMatchPage'
+import { apiOk } from '../../test/api'
 
 const CARDS: ReviewCard[] = [
   { phraseId: '1', english: 'Good catch', translation: 'Yaxshi topdingiz', example: 'Good catch, thanks.' },
@@ -40,7 +41,7 @@ describe('PhraseMatchBoard', () => {
 
   function renderBoard() {
     const fetchMock = vi.fn<typeof fetch>(async () =>
-      new Response(JSON.stringify({ points: 1, gamesScoredToday: 1 }), { status: 200 }))
+      apiOk({ points: 1, gamesScoredToday: 1 }))
     vi.stubGlobal('fetch', fetchMock)
     render(
       <QueryClientProvider client={new QueryClient()}>

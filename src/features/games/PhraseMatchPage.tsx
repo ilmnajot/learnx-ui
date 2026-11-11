@@ -3,11 +3,13 @@ import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { api } from '../../api/client'
 import type { ReviewCard } from '../../api/types'
+import { useUser } from '../../auth/AuthContext'
 import { QueryView, Screen, shuffled } from '../../components/ui'
 import { t } from '../../i18n'
 import { GameEnd } from './GameEnd'
 
-export function PhraseMatchBoard({ cards, onReplay }: { cards: ReviewCard[]; onReplay: () => void }) {
+/** {@code arabic} shows Arabic letters on the left instead of English phrases. */
+export function PhraseMatchBoard({ cards, onReplay, arabic = false }: { cards: ReviewCard[]; onReplay: () => void; arabic?: boolean }) {
   const left = useMemo(() => shuffled(cards), [cards])
   const right = useMemo(() => shuffled(cards), [cards])
   const [selected, setSelected] = useState<string | null>(null)
@@ -41,7 +43,7 @@ export function PhraseMatchBoard({ cards, onReplay }: { cards: ReviewCard[]; onR
   return (
     <div className="match">
       <div className="stack-sm">
-        <span className="eyebrow">{t.english}</span>
+        <span className="eyebrow">{arabic ? t.letterColumn : t.english}</span>
         {left.map((card) => (
           <button
             key={card.phraseId}
@@ -51,7 +53,7 @@ export function PhraseMatchBoard({ cards, onReplay }: { cards: ReviewCard[]; onR
             aria-pressed={selected === card.phraseId}
             onClick={() => setSelected(card.phraseId)}
           >
-            {card.english}
+            {arabic ? <span lang="ar" dir="rtl" className="arabic letter-tile">{card.english}</span> : card.english}
           </button>
         ))}
       </div>
@@ -74,6 +76,7 @@ export function PhraseMatchBoard({ cards, onReplay }: { cards: ReviewCard[]; onR
 }
 
 export default function PhraseMatchPage() {
+  const arabic = useUser().course === 'ARABIC_LETTERS'
   const [params] = useSearchParams()
   const size = Math.min(Number(params.get('size')) || 6, 8)
   const [round, setRound] = useState(0)
@@ -87,7 +90,7 @@ export default function PhraseMatchPage() {
   return (
     <Screen backTo="/games" title={t.phraseMatch}>
       <QueryView query={query}>
-        {(cards) => <PhraseMatchBoard key={round} cards={cards} onReplay={() => setRound(round + 1)} />}
+        {(cards) => <PhraseMatchBoard key={round} cards={cards} arabic={arabic} onReplay={() => setRound(round + 1)} />}
       </QueryView>
     </Screen>
   )

@@ -49,15 +49,22 @@ async function send<T>(path: string, options: RequestOptions): Promise<T> {
 
   if (response.ok) {
     const text = await response.text()
-    return (text ? JSON.parse(text) : undefined) as T
+    return (text ? (JSON.parse(text) as Envelope).data : undefined) as T
   }
   throw await toError(response)
 }
 
+/** Every response is wrapped: the payload is in `data`; an error's code and field messages are in `meta`. */
+interface Envelope {
+  message?: string
+  data?: unknown
+  meta?: { code?: string; fields?: Record<string, string> }
+}
+
 async function toError(response: Response): Promise<ApiError> {
   try {
-    const problem = (await response.json()) as { code?: string; detail?: string; fields?: Record<string, string> }
-    return new ApiError(response.status, problem.code ?? 'error', problem.detail ?? 'Request failed', problem.fields)
+    const body = (await response.json()) as Envelope
+    return new ApiError(response.status, body.meta?.code ?? 'error', body.message ?? 'Request failed', body.meta?.fields)
   } catch {
     return new ApiError(response.status, 'error', 'Request failed')
   }

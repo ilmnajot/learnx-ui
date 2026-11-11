@@ -8,6 +8,7 @@ import { App } from '../../App'
 import { AuthProvider } from '../../auth/AuthContext'
 import { landing as l } from '../../i18n/landing'
 import { t } from '../../i18n'
+import { apiError, apiOk } from '../../test/api'
 
 function renderAt(path: string) {
   render(
@@ -24,7 +25,7 @@ function renderAt(path: string) {
 describe('public pages', () => {
   beforeEach(() => {
     setAccessToken(null)
-    vi.stubGlobal('fetch', vi.fn<typeof fetch>(async () => new Response('{}', { status: 401 })))
+    vi.stubGlobal('fetch', vi.fn<typeof fetch>(async () => apiError(401)))
   })
 
   afterEach(() => vi.unstubAllGlobals())
@@ -63,12 +64,12 @@ describe('public pages', () => {
     vi.stubGlobal('fetch', vi.fn<typeof fetch>(async (input) => {
       const path = String(input)
       if (path.endsWith('/auth/refresh')) {
-        return new Response(JSON.stringify({
+        return apiOk({
           accessToken: 'token',
           user: { id: '1', email: 'a@example.test', displayName: 'Aziz', nativeLanguage: 'uz', timezone: 'Asia/Tashkent', onboarded: true },
-        }), { status: 200 })
+        })
       }
-      return new Response(JSON.stringify({ streak: 0, dueReviews: 0, completedLessons: 0, totalLessons: 30 }), { status: 200 })
+      return apiOk({ streak: 0, dueReviews: 0, completedLessons: 0, totalLessons: 30 })
     }))
     renderAt('/')
     expect(await screen.findByRole('heading', { level: 1, name: t.greeting('Aziz') })).toBeInTheDocument()

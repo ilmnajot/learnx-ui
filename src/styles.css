@@ -208,6 +208,20 @@ textarea { resize: vertical; }
 .step.past .step-dot { background: var(--accent-soft); color: var(--accent-text); }
 
 /* Lesson */
+/* Arabic text: system Arabic fonts on every major platform, so nothing is downloaded. */
+.arabic { font-family: 'Noto Naskh Arabic', 'Geeza Pro', 'Segoe UI', 'Arial', serif; unicode-bidi: isolate; }
+.letter-hero { display: block; font-size: 5.5rem; line-height: 1.35; color: var(--accent-text); }
+.letter-word { font-size: 2rem; }
+.letter-tile { font-size: 1.6rem; line-height: 1.3; }
+.letter-forms { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.letter-form { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 12px; background: var(--surface-2); }
+.letter-form .arabic { font-size: 2.1rem; line-height: 1.5; }
+.letter-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.letter-option { min-height: 72px; font-size: 1.15rem; font-weight: 650; }
+.letter-option .arabic { font-size: 2.2rem; line-height: 1.3; }
+.letter-option.ok { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-text); }
+.letter-option.bad { border-color: var(--danger); background: var(--danger-soft); color: var(--danger); }
+.bad { color: var(--danger); }
 .prompt { font-size: 1.15rem; font-weight: 650; line-height: 1.4; }
 .answer { font-weight: 700; color: var(--accent-text); font-size: 1.05rem; animation: pop 340ms var(--spring) both; }
 .phrase { font-size: 1.05rem; }

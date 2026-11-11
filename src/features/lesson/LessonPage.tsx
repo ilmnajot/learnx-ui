@@ -7,6 +7,7 @@ import type { LessonDetail, Phrase } from '../../api/types'
 import { Confetti } from '../../components/Confetti'
 import { Button, ErrorNote, ListenButton, QueryView, Screen, useApiQuery } from '../../components/ui'
 import { t } from '../../i18n'
+import { LetterLesson } from './LetterLesson'
 import { RoleplayStep } from './RoleplayStep'
 
 type Step = 'learn' | 'recall' | 'roleplay' | 'done'
@@ -90,9 +91,12 @@ export default function LessonPage() {
   }
 
   return (
-    <Screen backTo="/" title={titles[step]}>
+    <Screen backTo="/" title={query.data?.letter ? t.letterMeet : titles[step]}>
       <QueryView query={query}>
-        {({ lesson, phrases }) => (
+        {({ lesson, phrases, letter }) => letter ? (
+          // Keyed by lesson, so going on to the next letter starts a fresh lesson.
+          <LetterLesson key={id} lessonId={id} letter={letter} canDo={lesson.canDo} />
+        ) : (
           <div className="stack">
             <ol className="steps" aria-label={lesson.title}>
               {STEPS.map(({ id: stepId, icon: Icon, label }, i) => {

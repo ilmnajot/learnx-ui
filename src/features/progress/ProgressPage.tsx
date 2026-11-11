@@ -1,9 +1,11 @@
-import { CheckCircle2, Globe, MessageSquarePlus, ShieldCheck } from 'lucide-react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { CheckCircle2, Globe, MessageSquarePlus, Repeat, ShieldCheck } from 'lucide-react'
 import { Link } from 'react-router'
-import type { Progress } from '../../api/types'
+import { api } from '../../api/client'
+import type { Course, Progress, User } from '../../api/types'
 import { useAuth, useUser } from '../../auth/AuthContext'
 import { ThemeToggle } from '../../components/ThemeToggle'
-import { Button, QueryView, Screen, useApiQuery } from '../../components/ui'
+import { Button, ErrorNote, QueryView, Screen, useApiQuery } from '../../components/ui'
 import { t } from '../../i18n'
 
 const HEATMAP_DAYS = 28
@@ -27,6 +29,32 @@ function Stat({ label, value }: { label: string; value: string | number }) {
       <span className="muted small">{label}</span>
       <strong>{value}</strong>
     </div>
+  )
+}
+
+const COURSE_NAMES: Record<Course, string> = { ENGLISH: t.courseEnglish, ARABIC_LETTERS: t.courseArabic }
+
+/** Progress in each course is kept, so learners can switch back and forth. */
+function CourseSwitch() {
+  const user = useUser()
+  const { setUser } = useAuth()
+  const queryClient = useQueryClient()
+  const other: Course = user.course === 'ARABIC_LETTERS' ? 'ENGLISH' : 'ARABIC_LETTERS'
+  const change = useMutation({
+    mutationFn: () => api<User>('/me', { method: 'PATCH', body: { course: other } }),
+    onSuccess: (updated) => {
+      setUser(updated)
+      void queryClient.invalidateQueries()
+    },
+  })
+  return (
+    <>
+      <p className="muted small">{t.yourCourse}: {COURSE_NAMES[user.course]}</p>
+      <Button disabled={change.isPending} onClick={() => change.mutate()}>
+        <Repeat size={16} aria-hidden /> {t.switchCourse(COURSE_NAMES[other])}
+      </Button>
+      <ErrorNote error={change.error} />
+    </>
   )
 }
 
@@ -78,7 +106,8 @@ export default function ProgressPage() {
                   <ThemeToggle />
                 </div>
                 <p className="muted small">{user.displayName} · {user.email}</p>
-                {user.level && <p className="muted small">{t.level}: {user.level}</p>}
+                {user.level && user.course === 'ENGLISH' && <p className="muted small">{t.level}: {user.level}</p>}
+                <CourseSwitch />
                 {user.admin && (
                   <Link to="/admin" className="btn btn-primary"><ShieldCheck size={16} aria-hidden /> {t.adminPanel}</Link>
                 )}

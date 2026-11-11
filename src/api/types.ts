@@ -1,3 +1,6 @@
+/** What the learner studies. Arabic learners start with the alphabet. */
+export type Course = 'ENGLISH' | 'ARABIC_LETTERS'
+
 export interface User {
   id: string
   email: string
@@ -10,6 +13,7 @@ export interface User {
   onboarded: boolean
   emailVerified: boolean
   admin: boolean
+  course: Course
 }
 
 export interface PublicStats {
@@ -92,6 +96,28 @@ export interface LessonDetail {
   }
   phrases: Phrase[]
   completed: boolean
+  /** Only for lessons of the Arabic alphabet course. */
+  letter?: Letter
+}
+
+export interface Letter {
+  lessonId: string
+  glyph: string
+  name: string
+  latin: string
+  hint: string
+  isolatedForm: string
+  initialForm: string
+  medialForm: string
+  finalForm: string
+  /** What speech synthesis reads aloud: the letter with a short "a". */
+  say: string
+  word: string
+  wordLatin: string
+  wordMeaning: string
+  /** Letters learners confuse with this one, offered as wrong answers. */
+  similar: string[]
+  audioUrl?: string | null
 }
 
 export interface Today {

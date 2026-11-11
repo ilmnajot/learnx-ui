@@ -11,6 +11,7 @@ import { t } from '../../i18n'
 import { a } from '../../i18n/admin'
 import { landing as l } from '../../i18n/landing'
 import { formatCard } from './CommunitySections'
+import { apiError, apiOk } from '../../test/api'
 
 const SITE: PublicSite = {
   stats: {
@@ -24,11 +25,11 @@ const SITE: PublicSite = {
 
 const USER: User = {
   id: '1', email: 'a@example.test', displayName: 'Aziz', nativeLanguage: 'uz', timezone: 'Asia/Tashkent',
-  onboarded: true, emailVerified: true, admin: false,
+  onboarded: true, emailVerified: true, admin: false, course: 'ENGLISH',
 }
 
 function json(status: number, body: unknown = {}): Response {
-  return new Response(JSON.stringify(body), { status })
+  return status < 400 ? apiOk(body, status) : apiError(status, (body as { code?: string }).code)
 }
 
 function stub(site: Partial<PublicSite> | null, user: User | null = null, signsInAs: User | null = null) {

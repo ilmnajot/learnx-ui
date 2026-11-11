@@ -1,10 +1,12 @@
 import { useMutation } from '@tanstack/react-query'
 import {
+  BookOpenText,
   Building2,
   Cloud,
   Database,
   Globe,
   Handshake,
+  Languages,
   LayoutTemplate,
   MessagesSquare,
   Server,
@@ -22,7 +24,7 @@ import { Confetti } from '../../components/Confetti'
 import { Button, ErrorNote, ProgressBar, QueryView, Screen, useApiQuery } from '../../components/ui'
 import { t } from '../../i18n'
 
-type Step = 'role' | 'goal' | 'placement' | 'result'
+type Step = 'course' | 'arabic' | 'role' | 'goal' | 'placement' | 'result'
 
 const ROLE_ICONS: LucideIcon[] = [Server, LayoutTemplate, Smartphone, TestTube2, Cloud, Database, Sparkles]
 const GOAL_ICONS: LucideIcon[] = [MessagesSquare, Building2, UserCheck, Handshake]
@@ -92,13 +94,18 @@ function Placement({ onDone }: { onDone: (result: PlacementResult) => void }) {
 
 export default function OnboardingPage() {
   const { setUser } = useAuth()
-  const [step, setStep] = useState<Step>('role')
+  const [step, setStep] = useState<Step>('course')
   const [jobRole, setJobRole] = useState('')
   const [goal, setGoal] = useState('')
   const [result, setResult] = useState<PlacementResult | null>(null)
 
   const complete = useMutation({
-    mutationFn: () => api<User>('/me', { method: 'PATCH', body: { jobRole, goal, onboarded: true } }),
+    mutationFn: () => api<User>('/me', { method: 'PATCH', body: { course: 'ENGLISH', jobRole, goal, onboarded: true } }),
+    onSuccess: setUser,
+  })
+  // The alphabet course has no levels, so Arabic learners skip the role, goal and placement questions.
+  const startArabic = useMutation({
+    mutationFn: () => api<User>('/me', { method: 'PATCH', body: { course: 'ARABIC_LETTERS', onboarded: true } }),
     onSuccess: setUser,
   })
 
@@ -106,6 +113,41 @@ export default function OnboardingPage() {
     <Screen>
       <div className="narrow stack">
         <p className="brand"><span aria-hidden>&gt;_</span> {t.appName}</p>
+        {step === 'course' && (
+          <>
+            <h1>{t.onboardingCourse}</h1>
+            <div className="stack-sm">
+              <Button className="choice" onClick={() => setStep('role')}>
+                <span className="chip green"><Languages size={18} aria-hidden /></span>
+                <span className="stack-xs">
+                  <strong>{t.courseEnglish}</strong>
+                  <span className="muted small">{t.courseEnglishHint}</span>
+                </span>
+              </Button>
+              <Button className="choice" onClick={() => setStep('arabic')}>
+                <span className="chip violet"><BookOpenText size={18} aria-hidden /></span>
+                <span className="stack-xs">
+                  <strong>{t.courseArabic}</strong>
+                  <span className="muted small">{t.courseArabicHint}</span>
+                </span>
+              </Button>
+            </div>
+          </>
+        )}
+        {step === 'arabic' && (
+          <>
+            <h1>{t.arabicReady}</h1>
+            <div className="card center stack-sm">
+              <p className="letter-hero arabic" lang="ar" dir="rtl">أ ب ت</p>
+              <p className="muted">{t.arabicReadyHint}</p>
+            </div>
+            <ErrorNote error={startArabic.error} />
+            <Button variant="primary" disabled={startArabic.isPending} onClick={() => startArabic.mutate()}>
+              {t.onboardingStart}
+            </Button>
+            <Button onClick={() => setStep('course')}>{t.back}</Button>
+          </>
+        )}
         {step === 'role' && (
           <>
             <h1>{t.onboardingRole}</h1>

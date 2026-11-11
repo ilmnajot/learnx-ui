@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { t } from '../../i18n'
 import { ShadowingSession } from './ShadowingPage'
 import { compareSpeech } from './speechMatch'
+import { apiOk } from '../../test/api'
 
 describe('compareSpeech', () => {
   it('passes a perfect repeat, ignoring case and punctuation', () => {
@@ -74,7 +75,7 @@ describe('ShadowingSession', () => {
 
   function renderSession() {
     const fetchMock = vi.fn<typeof fetch>(async () =>
-      new Response(JSON.stringify({ points: 1, gamesScoredToday: 1 }), { status: 200 }))
+      apiOk({ points: 1, gamesScoredToday: 1 }))
     vi.stubGlobal('fetch', fetchMock)
     render(
       <QueryClientProvider client={new QueryClient()}>

@@ -80,19 +80,19 @@ export function useApiQuery<T>(key: readonly unknown[], path: string) {
   return useQuery<T>({ queryKey: key, queryFn: async () => (await api<T>(path)) ?? (null as T) })
 }
 
-export function speak(text: string, rate = 0.95): void {
+export function speak(text: string, rate = 0.95, lang = 'en-US'): void {
   if (!('speechSynthesis' in window)) return
   window.speechSynthesis.cancel()
   const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang = 'en-US'
+  utterance.lang = lang
   utterance.rate = rate
   window.speechSynthesis.speak(utterance)
 }
 
-export function ListenButton({ text }: { text: string }) {
+export function ListenButton({ text, lang }: { text: string; lang?: string }) {
   if (!('speechSynthesis' in window)) return null
   return (
-    <button type="button" className="icon-btn" aria-label={t.listen} title={t.listen} onClick={() => speak(text)}>
+    <button type="button" className="icon-btn" aria-label={t.listen} title={t.listen} onClick={() => speak(text, 0.95, lang)}>
       <Volume2 size={18} aria-hidden />
     </button>
   )
