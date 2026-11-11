@@ -50,9 +50,11 @@ function MeetStep({ letter, onNext }: { letter: Letter; onNext: () => void }) {
       <div className="card center stack-sm">
         <Arabic className="letter-hero pop">{letter.glyph}</Arabic>
         <p className="prompt">{letter.name} — «{letter.latin}»</p>
-        <p className="muted">{letter.hint}</p>
+        <p className="muted"><strong>{t.letterMakhraj}:</strong> {letter.hint}</p>
         <Button onClick={() => playLetter(letter)}><Volume2 size={18} aria-hidden /> {t.letterPlay}</Button>
-        {voiceMissing && !letter.audioUrl && <p className="muted small">{t.letterNoVoice}</p>}
+        {letter.audioUrl
+          ? <p className="muted small">{t.letterRecitation}</p>
+          : <p className="muted small">{voiceMissing ? t.letterNoVoice : t.letterSyntheticVoice}</p>}
       </div>
       <section className="card stack-sm">
         <strong>{t.letterForms}</strong>
@@ -67,7 +69,7 @@ function MeetStep({ letter, onNext }: { letter: Letter; onNext: () => void }) {
       </section>
       <section className="card stack-xs">
         <strong>{t.letterExample}</strong>
-        <p><Arabic className="letter-word">{letter.word}</Arabic></p>
+        <p><Arabic className="letter-word quran">{letter.word}</Arabic></p>
         <p className="muted">{letter.wordLatin} — {letter.wordMeaning}</p>
       </section>
       <Button variant="primary" onClick={onNext}>{t.letterStartQuiz}</Button>

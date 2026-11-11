@@ -6,6 +6,8 @@ import { ApiError } from './api/client'
 import { App } from './App'
 import { AuthProvider } from './auth/AuthContext'
 import { ErrorBoundary } from './components/ErrorBoundary'
+// Only the Arabic subset: Quranic examples are the only text in this font.
+import '@fontsource/amiri-quran/arabic-400.css'
 import './styles.css'
 
 const queryClient = new QueryClient({

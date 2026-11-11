@@ -212,6 +212,8 @@ textarea { resize: vertical; }
 .arabic { font-family: 'Noto Naskh Arabic', 'Geeza Pro', 'Segoe UI', 'Arial', serif; unicode-bidi: isolate; }
 .letter-hero { display: block; font-size: 5.5rem; line-height: 1.35; color: var(--accent-text); }
 .letter-word { font-size: 2rem; }
+/* Quranic text: Amiri Quran draws the mushaf's vowel marks and signs; the rest is a fallback. */
+.quran { font-family: 'Amiri Quran', 'Noto Naskh Arabic', 'Geeza Pro', serif; line-height: 2; }
 .letter-tile { font-size: 1.6rem; line-height: 1.3; }
 .letter-forms { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .letter-form { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 12px; background: var(--surface-2); }
